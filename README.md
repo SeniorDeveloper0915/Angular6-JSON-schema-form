@@ -1,8 +1,8 @@
 
 # Angular v6 for [Angular2-json-schema-form](https://github.com/dschnelldavis/angular2-json-schema-form)
 
-[![GitHub release](https://img.shields.io/github/release/SeniorDeveloper0915/angular6-json-schema-form.svg)](https://github.com/SeniorDeveloper0915/angular6-json-schema-form/releases/latest)
-[![npm downloads](https://img.shields.io/npm/dm/angular6-json-schema-form.svg?style=plastic)](https://www.npmjs.com/package/angular6-json-schema-form) [![GitHub MIT License](https://img.shields.io/github/license/SeniorDeveloper0915/angular6-json-schema-form.svg?style=social)](https://github.com/SeniorDeveloper0915/angular6-json-schema-form)
+[![GitHub release](https://img.shields.io/github/release/hamzahamidi/angular6-json-schema-form.svg)](https://github.com/hamzahamidi/angular6-json-schema-form/releases/latest)
+[![npm downloads](https://img.shields.io/npm/dm/angular6-json-schema-form.svg?style=plastic)](https://www.npmjs.com/package/angular6-json-schema-form) [![GitHub MIT License](https://img.shields.io/github/license/hamzahamidi/angular6-json-schema-form.svg?style=social)](https://github.com/hamzahamidi/angular6-json-schema-form)
 
 Note: This project is a continuation to [Angular2-json-schema-form](https://github.com/dschnelldavis/angular2-json-schema-form) & is and is not affiliated with any organization. The setup is therfore still the same as [Angular2-json-schema-form](https://github.com/dschnelldavis/angular2-json-schema-form).
 
@@ -23,10 +23,10 @@ This example playground features over 70 different JSON Schemas for you to try (
 
 ### To install from GitHub
 
-To install [the library and the example playground from GitHub](https://github.com/SeniorDeveloper0915/angular6-json-schema-form), clone `https://github.com/SeniorDeveloper0915/angular6-json-schema-form.git` with your favorite git program. Or, assuming you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Node/NPM](https://nodejs.org/en/download/) installed, enter the following in your terminal:
+To install [the library and the example playground from GitHub](https://github.com/hamzahamidi/angular6-json-schema-form), clone `https://github.com/hamzahamidi/angular6-json-schema-form.git` with your favorite git program. Or, assuming you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Node/NPM](https://nodejs.org/en/download/) installed, enter the following in your terminal:
 
 ```shell
-git clone https://github.com/SeniorDeveloper0915/angular6-json-schema-form.git angular6-json-schema-form
+git clone https://github.com/hamzahamidi/angular6-json-schema-form.git angular6-json-schema-form
 cd angular6-json-schema-form
 npm install
 npm start
