@@ -1,15 +1,9 @@
-import { copy, hasOwn } from './utility.functions';
 import { Injectable } from '@angular/core';
-import {
-  isArray,
-  isDefined,
-  isEmpty,
-  isMap,
-  isNumber,
-  isObject,
-  isString
-  } from './validator.functions';
 
+import {
+  isDefined, isEmpty, isObject, isArray, isMap, isNumber, isString
+} from './validator.functions';
+import { hasOwn, copy } from './utility.functions';
 
 /**
  * 'JsonPointer' class

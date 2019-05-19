@@ -1,12 +1,11 @@
-import { AbstractControl } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
-import { JsonSchemaFormService } from '../json-schema-form.service';
+import { AbstractControl } from '@angular/forms';
 
+import { JsonSchemaFormService } from '../json-schema-form.service';
 
 // TODO: Add this control
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'file-widget',
   template: ``,
 })

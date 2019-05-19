@@ -29,7 +29,9 @@
     "@angular/forms": "^6.0.0",
     "@angular/platform-browser": "^6.0.0",
     "@angular/flex-layout": "^6.0.0-beta.16",
-    "rxjs": "^6.0.0",
+    "rxjs": "^6.0.0"
+  },
+  "devDependencies": {
     "ajv": "^6.0.1",
     "lodash": "^4.17.4"
   }

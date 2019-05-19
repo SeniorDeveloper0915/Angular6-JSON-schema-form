@@ -1,8 +1,10 @@
-import { BASIC_WIDGETS } from './index';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { JsonSchemaFormService } from '../json-schema-form.service';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+
+import { BASIC_WIDGETS } from './index';
 import { OrderableDirective } from './orderable.directive';
 
 @NgModule({

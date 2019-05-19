@@ -1,31 +1,18 @@
-import _ from 'lodash';
-import {
-  checkInlineType,
-  getFromSchema,
-  getInputType,
-  isInputRequired,
-  removeRecursiveReferences,
-  updateInputOptions
-  } from './json-schema.functions';
-import {
-  copy,
-  fixTitle,
-  forEach,
-  hasOwn
-  } from './utility.functions';
-import {
-  inArray,
-  isArray,
-  isDefined,
-  isEmpty,
-  isNumber,
-  isObject,
-  isString
-  } from './validator.functions';
-import { JsonPointer } from './jsonpointer.functions';
+import { BehaviorSubject } from 'rxjs';
+
+import * as _ from 'lodash';
+
 import { TitleMapItem } from '../json-schema-form.service';
-
-
+import {
+  inArray, isArray, isEmpty, isNumber, isObject, isDefined, isString
+} from './validator.functions';
+import { copy, fixTitle, forEach, hasOwn } from './utility.functions';
+import { Pointer, JsonPointer } from './jsonpointer.functions';
+import {
+  getFromSchema, getInputType, getSubSchema, checkInlineType, isInputRequired,
+  removeRecursiveReferences, updateInputOptions
+} from './json-schema.functions';
+import { buildFormGroupTemplate, getControl } from './form-group.functions';
 
 /**
  * Layout function library:
@@ -46,7 +33,7 @@ import { TitleMapItem } from '../json-schema-form.service';
  *
  * //   jsf
  * //   widgetLibrary
- * //
+ * // 
  */
 export function buildLayout(jsf, widgetLibrary) {
   let hasSubmitButton = !JsonPointer.get(jsf, '/formOptions/addSubmit');
@@ -81,9 +68,9 @@ export function buildLayout(jsf, widgetLibrary) {
           newNode.options.validationMessages = newNode.options.errorMessages;
           delete newNode.options.errorMessages;
 
-          // Convert Angular Schema Form (AngularJS) 'validationMessage' to
-          // Angular JSON Schema Form 'validationMessages'
-          // TV4 codes from https://github.com/geraintluff/tv4/blob/master/source/api.js
+        // Convert Angular Schema Form (AngularJS) 'validationMessage' to
+        // Angular JSON Schema Form 'validationMessages'
+        // TV4 codes from https://github.com/geraintluff/tv4/blob/master/source/api.js
         } else if (hasOwn(newNode.options, 'validationMessage')) {
           if (typeof newNode.options.validationMessage === 'string') {
             newNode.options.validationMessages = newNode.options.validationMessage;
@@ -92,24 +79,24 @@ export function buildLayout(jsf, widgetLibrary) {
             Object.keys(newNode.options.validationMessage).forEach(key => {
               const code = key + '';
               const newKey =
-                code === '0' ? 'type' :
-                  code === '1' ? 'enum' :
-                    code === '100' ? 'multipleOf' :
-                      code === '101' ? 'minimum' :
-                        code === '102' ? 'exclusiveMinimum' :
-                          code === '103' ? 'maximum' :
-                            code === '104' ? 'exclusiveMaximum' :
-                              code === '200' ? 'minLength' :
-                                code === '201' ? 'maxLength' :
-                                  code === '202' ? 'pattern' :
-                                    code === '300' ? 'minProperties' :
-                                      code === '301' ? 'maxProperties' :
-                                        code === '302' ? 'required' :
-                                          code === '304' ? 'dependencies' :
-                                            code === '400' ? 'minItems' :
-                                              code === '401' ? 'maxItems' :
-                                                code === '402' ? 'uniqueItems' :
-                                                  code === '500' ? 'format' : code + '';
+                code ===  '0'  ? 'type' :
+                code ===  '1'  ? 'enum' :
+                code === '100' ? 'multipleOf' :
+                code === '101' ? 'minimum' :
+                code === '102' ? 'exclusiveMinimum' :
+                code === '103' ? 'maximum' :
+                code === '104' ? 'exclusiveMaximum' :
+                code === '200' ? 'minLength' :
+                code === '201' ? 'maxLength' :
+                code === '202' ? 'pattern' :
+                code === '300' ? 'minProperties' :
+                code === '301' ? 'maxProperties' :
+                code === '302' ? 'required' :
+                code === '304' ? 'dependencies' :
+                code === '400' ? 'minItems' :
+                code === '401' ? 'maxItems' :
+                code === '402' ? 'uniqueItems' :
+                code === '500' ? 'format' : code + '';
               newNode.options.validationMessages[newKey] = newNode.options.validationMessage[key];
             });
           }
@@ -136,13 +123,13 @@ export function buildLayout(jsf, widgetLibrary) {
           JsonPointer.compile(JsonPointer.parseObjectPath(newNode.key), '-');
         delete newNode.key;
 
-        // If newNode is an array, search for dataPointer in child nodes
+      // If newNode is an array, search for dataPointer in child nodes
       } else if (hasOwn(newNode, 'type') && newNode.type.slice(-5) === 'array') {
         const findDataPointer = (items) => {
           if (items === null || typeof items !== 'object') { return; }
           if (hasOwn(items, 'dataPointer')) { return items.dataPointer; }
           if (isArray(items.items)) {
-            for (const item of items.items) {
+            for (let item of items.items) {
               if (hasOwn(item, 'dataPointer') && item.dataPointer.indexOf('/-') !== -1) {
                 return item.dataPointer;
               }
@@ -250,7 +237,7 @@ export function buildLayout(jsf, widgetLibrary) {
             nodeDataMap.set('listItems', newNode.options.listItems);
           }
           if (!jsf.arrayMap.has(shortDataPointer)) {
-            jsf.arrayMap.set(shortDataPointer, newNode.options.tupleItems);
+            jsf.arrayMap.set(shortDataPointer, newNode.options.tupleItems)
           }
         }
         if (isInputRequired(jsf.schema, schemaPointer)) {
@@ -284,7 +271,7 @@ export function buildLayout(jsf, widgetLibrary) {
       if (newNode.dataType === 'array' &&
         (hasOwn(newNode, 'items') || hasOwn(newNode, 'additionalItems'))
       ) {
-        const itemRefPointer = removeRecursiveReferences(
+        let itemRefPointer = removeRecursiveReferences(
           newNode.dataPointer + '/-', jsf.dataRecursiveRefMap, jsf.arrayMap
         );
         if (!jsf.dataMap.has(itemRefPointer)) {
@@ -294,16 +281,19 @@ export function buildLayout(jsf, widgetLibrary) {
 
         // Fix insufficiently nested array item groups
         if (newNode.items.length > 1) {
-          const arrayItemGroup = [];
+          let arrayItemGroup = [];
+          let arrayItemGroupTemplate = [];
+          let newIndex = 0;
           for (let i = newNode.items.length - 1; i >= 0; i--) {
-            const subItem = newNode.items[i];
+            let subItem = newNode.items[i];
             if (hasOwn(subItem, 'dataPointer') &&
               subItem.dataPointer.slice(0, itemRefPointer.length) === itemRefPointer
             ) {
-              const arrayItem = newNode.items.splice(i, 1)[0];
+              let arrayItem = newNode.items.splice(i, 1)[0];
               arrayItem.dataPointer = newNode.dataPointer + '/-' +
                 arrayItem.dataPointer.slice(itemRefPointer.length);
               arrayItemGroup.unshift(arrayItem);
+              newIndex++;
             } else {
               subItem.arrayItem = true;
               // TODO: Check schema to get arrayItemType and removable
@@ -344,7 +334,7 @@ export function buildLayout(jsf, widgetLibrary) {
         if (isArray(newNode.items)) {
           const arrayListItems =
             newNode.items.filter(item => item.type !== '$ref').length -
-            newNode.options.tupleItems;
+              newNode.options.tupleItems;
           if (arrayListItems > newNode.options.listItems) {
             newNode.options.listItems = arrayListItems;
             nodeDataMap.set('listItems', arrayListItems);
@@ -401,7 +391,7 @@ export function buildLayout(jsf, widgetLibrary) {
               buttonText = fixTitle(newNode.name);
             }
 
-            // If newNode doesn't have a title, look for title of parent array item
+          // If newNode doesn't have a title, look for title of parent array item
           } else {
             const parentSchema =
               getFromSchema(jsf.schema, newNode.dataPointer, 'parentSchema');
@@ -494,7 +484,7 @@ export function buildLayout(jsf, widgetLibrary) {
  * //  { boolean = null } removable -
  * //  { boolean = false } forRefLibrary -
  * //  { string = '' } dataPointerPrefix -
- * //
+ * // 
  */
 export function buildLayoutFromSchema(
   jsf, widgetLibrary, nodeValue = null, schemaPointer = '',
@@ -598,6 +588,7 @@ export function buildLayoutFromSchema(
 
   } else if (newNode.dataType === 'array') {
     newNode.items = [];
+    let templateArray: any[] = [];
     newNode.options.maxItems = Math.min(
       schema.maxItems || 1000, newNode.options.maxItems || 1000
     );
@@ -628,7 +619,7 @@ export function buildLayoutFromSchema(
       nodeDataMap.set('listItems', newNode.options.listItems);
     }
     if (!jsf.arrayMap.has(shortDataPointer)) {
-      jsf.arrayMap.set(shortDataPointer, newNode.options.tupleItems);
+      jsf.arrayMap.set(shortDataPointer, newNode.options.tupleItems)
     }
     removable = newNode.options.removable !== false;
     let additionalItemsSchemaPointer: string = null;
@@ -680,7 +671,7 @@ export function buildLayoutFromSchema(
         additionalItemsSchemaPointer = schemaPointer + '/additionalItems';
       }
 
-      // If 'items' is an object = list items only (no tuple items)
+    // If 'items' is an object = list items only (no tuple items)
     } else if (isObject(schema.items)) {
       additionalItemsSchemaPointer = schemaPointer + '/items';
     }
@@ -772,7 +763,7 @@ export function buildLayoutFromSchema(
       buttonText =
         (/^add\b/i.test(newNode.name) ? '' : 'Add ') + fixTitle(newNode.name);
 
-      // If newNode doesn't have a title, look for title of parent array item
+    // If newNode doesn't have a title, look for title of parent array item
     } else {
       const parentSchema =
         JsonPointer.get(jsf.schema, schemaPointer, 0, -1);
@@ -840,14 +831,14 @@ export function buildLayoutFromSchema(
  *   function - the funciton to invoke on each element
  * //  { string|string[] = '' } layoutPointer - the layoutPointer to layout, inside rootLayout
  * //  { any[] = layout } rootLayout - the root layout, which conatins layout
- * //
+ * // 
  */
 export function mapLayout(layout, fn, layoutPointer = '', rootLayout = layout) {
   let indexPad = 0;
   let newLayout: any[] = [];
   forEach(layout, (item, index) => {
-    const realIndex = +index + indexPad;
-    const newLayoutPointer = layoutPointer + '/' + realIndex;
+    let realIndex = +index + indexPad;
+    let newLayoutPointer = layoutPointer + '/' + realIndex;
     let newNode: any = copy(item);
     let itemsArray: any[] = [];
     if (isObject(item)) {
@@ -871,7 +862,7 @@ export function mapLayout(layout, fn, layoutPointer = '', rootLayout = layout) {
     }
   });
   return newLayout;
-}
+};
 
 /**
  * 'getLayoutNode' function
@@ -901,8 +892,8 @@ export function getLayoutNode(
     });
     return newLayoutNode;
 
-    // Otherwise, return referenced layout
-  } else {
+  // Otherwise, return referenced layout
+} else {
     let newLayoutNode = jsf.layoutRefLibrary[refNode.$ref];
     // If value defined, build new node from schema (to set array lengths)
     if (isDefined(nodeValue)) {
@@ -948,7 +939,7 @@ export function buildTitleMap(
   if (titleMap) {
     if (isArray(titleMap)) {
       if (enumList) {
-        for (const i of Object.keys(titleMap)) {
+        for (let i of Object.keys(titleMap)) {
           if (isObject(titleMap[i])) { // JSON Form style
             const value = titleMap[i].value;
             if (enumList.includes(value)) {
@@ -974,30 +965,30 @@ export function buildTitleMap(
         }
       }
     } else if (enumList) { // Alternate JSON Form style, with enum list
-      for (const i of Object.keys(enumList)) {
-        const value = enumList[i];
+      for (let i of Object.keys(enumList)) {
+        let value = enumList[i];
         if (hasOwn(titleMap, value)) {
-          const name = titleMap[value];
+          let name = titleMap[value];
           newTitleMap.push({ name, value });
           if (value === undefined || value === null) { hasEmptyValue = true; }
         }
       }
     } else { // Alternate JSON Form style, without enum list
-      for (const value of Object.keys(titleMap)) {
-        const name = titleMap[value];
+      for (let value of Object.keys(titleMap)) {
+        let name = titleMap[value];
         newTitleMap.push({ name, value });
         if (value === undefined || value === null) { hasEmptyValue = true; }
       }
     }
   } else if (enumList) { // Build map from enum list alone
-    for (const i of Object.keys(enumList)) {
-      const name = enumList[i];
-      const value = enumList[i];
-      newTitleMap.push({ name, value });
+    for (let i of Object.keys(enumList)) {
+      let name = enumList[i];
+      let value = enumList[i];
+      newTitleMap.push({ name, value});
       if (value === undefined || value === null) { hasEmptyValue = true; }
     }
   } else { // If no titleMap and no enum list, return default map of boolean values
-    newTitleMap = [{ name: 'True', value: true }, { name: 'False', value: false }];
+    newTitleMap = [ { name: 'True', value: true }, { name: 'False', value: false } ];
   }
 
   // Does titleMap have groups?
@@ -1036,7 +1027,7 @@ export function buildTitleMap(
         return groupTitleMap;
       }, []);
 
-      // If flatList = false, combine items from matching groups
+    // If flatList = false, combine items from matching groups
     } else {
       newTitleMap = newTitleMap.reduce((groupTitleMap, title) => {
         if (hasOwn(title, 'group')) {

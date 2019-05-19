@@ -1,11 +1,10 @@
-import { AbstractControl } from '@angular/forms';
-import { buildTitleMap } from '../../shared';
 import { Component, Input, OnInit } from '@angular/core';
-import { JsonSchemaFormService } from '../../json-schema-form.service';
+import { AbstractControl } from '@angular/forms';
 
+import { JsonSchemaFormService } from '../../json-schema-form.service';
+import { buildTitleMap } from '../../shared';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'material-button-group-widget',
   template: `
     <div>

@@ -1,11 +1,10 @@
-import { AbstractControl } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
-import { hasOwn } from '../shared/utility.functions';
-import { JsonSchemaFormService } from '../json-schema-form.service';
+import { AbstractControl } from '@angular/forms';
 
+import { JsonSchemaFormService } from '../json-schema-form.service';
+import { hasOwn } from '../shared/utility.functions';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'submit-widget',
   template: `
     <div

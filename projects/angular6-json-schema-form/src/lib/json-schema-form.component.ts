@@ -1,33 +1,22 @@
-import _ from 'lodash';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  forwardRef,
-  Input,
-  OnChanges,
-  OnInit,
-  Output
-  } from '@angular/core';
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+  forwardRef, Input, Output, OnChanges, OnInit
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { convertSchemaToDraft6 } from './shared/convert-schema-to-draft6.function';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { forEach, hasOwn } from './shared/utility.functions';
+
+import * as _ from 'lodash';
+
 import { FrameworkLibraryService } from './framework-library/framework-library.service';
-import {
-  hasValue,
-  inArray,
-  isArray,
-  isEmpty,
-  isObject
-  } from './shared/validator.functions';
-import { JsonPointer } from './shared/jsonpointer.functions';
-import { JsonSchemaFormService } from './json-schema-form.service';
-import { resolveSchemaReferences } from './shared/json-schema.functions';
 import { WidgetLibraryService } from './widget-library/widget-library.service';
-
-
+import { JsonSchemaFormService } from './json-schema-form.service';
+import { convertSchemaToDraft6 } from './shared/convert-schema-to-draft6.function';
+import { resolveSchemaReferences } from './shared/json-schema.functions';
+import {
+  hasValue, inArray, isArray, isEmpty, isNumber, isObject
+} from './shared/validator.functions';
+import { forEach, hasOwn } from './shared/utility.functions';
+import { JsonPointer } from './shared/jsonpointer.functions';
 
 export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -70,7 +59,6 @@ export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
  *  - brace, Browserified Ace editor       http://thlorenz.github.io/brace
  */
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'json-schema-form',
   template: `
     <div *ngFor="let stylesheet of stylesheets">
@@ -143,9 +131,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
   }
 
   // Outputs
-  // tslint:disable-next-line:no-output-on-prefix
   @Output() onChanges = new EventEmitter<any>(); // Live unvalidated internal form data
-  // tslint:disable-next-line:no-output-on-prefix
   @Output() onSubmit = new EventEmitter<any>(); // Complete validated form data
   @Output() isValid = new EventEmitter<boolean>(); // Is current data valid?
   @Output() validationErrors = new EventEmitter<any>(); // Validation errors (if any)

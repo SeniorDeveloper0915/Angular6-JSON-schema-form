@@ -1,10 +1,10 @@
-import { AbstractControl } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
-import { hasOwn } from '../../shared/utility.functions';
+import { AbstractControl } from '@angular/forms';
+
 import { JsonSchemaFormService } from '../../json-schema-form.service';
+import { hasOwn } from '../../shared/utility.functions';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'material-button-widget',
   template: `
     <div class="button-row" [class]="options?.htmlClass || ''">

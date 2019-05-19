@@ -1,12 +1,14 @@
-import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import ace from 'brace';
-import 'brace/mode/json';
+import {
+  Directive, EventEmitter, Output, ElementRef, Input
+} from '@angular/core';
+
+import 'brace';
 import 'brace/theme/sqlserver';
+import 'brace/mode/json';
 
-
+declare var ace: any;
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[ace-editor]'
 })
 export class AceEditorDirective {
@@ -23,7 +25,8 @@ export class AceEditorDirective {
 
   constructor(elementRef: ElementRef) {
     const el = elementRef.nativeElement;
-    this.editor = ace.edit(el);
+    ace.config.set('basePath', '/node_modules/brace');
+    this.editor = ace['edit'](el);
     this.init();
     this.initEvents();
   }
@@ -42,7 +45,8 @@ export class AceEditorDirective {
   initEvents() {
     this.editor.on('change', () => {
       const newVal = this.editor.getValue();
-      if (this.oldText) {
+      if (newVal === this.oldText) { return; }
+      if (typeof this.oldText !== 'undefined') {
         this.textChanged.emit(newVal);
       }
       this.oldText = newVal;

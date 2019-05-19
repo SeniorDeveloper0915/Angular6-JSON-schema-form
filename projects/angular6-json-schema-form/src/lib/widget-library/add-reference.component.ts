@@ -1,14 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit
-  } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
 import { JsonSchemaFormService } from '../json-schema-form.service';
 
-
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'add-reference-widget',
   template: `
     <button *ngIf="showAddButton"

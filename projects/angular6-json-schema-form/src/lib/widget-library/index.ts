@@ -1,4 +1,5 @@
 import { AddReferenceComponent } from './add-reference.component';
+import { OneOfComponent } from './one-of.component';
 import { ButtonComponent } from './button.component';
 import { CheckboxComponent } from './checkbox.component';
 import { CheckboxesComponent } from './checkboxes.component';
@@ -8,7 +9,6 @@ import { InputComponent } from './input.component';
 import { MessageComponent } from './message.component';
 import { NoneComponent } from './none.component';
 import { NumberComponent } from './number.component';
-import { OneOfComponent } from './one-of.component';
 import { RadiosComponent } from './radios.component';
 import { RootComponent } from './root.component';
 import { SectionComponent } from './section.component';
@@ -53,4 +53,3 @@ export { TabComponent } from './tab.component';
 export { TabsComponent } from './tabs.component';
 export { TemplateComponent } from './template.component';
 export { TextareaComponent } from './textarea.component';
-export { WidgetLibraryService } from './widget-library.service';

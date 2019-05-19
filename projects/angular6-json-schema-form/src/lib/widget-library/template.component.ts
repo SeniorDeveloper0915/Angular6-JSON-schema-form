@@ -1,18 +1,11 @@
 import {
-  Component,
-  ComponentFactoryResolver,
-  ComponentRef,
-  Input,
-  OnChanges,
-  OnInit,
-  ViewChild,
-  ViewContainerRef
-  } from '@angular/core';
+  Component, ComponentFactoryResolver, ComponentRef, Input,
+  OnChanges, OnInit, ViewChild, ViewContainerRef
+} from '@angular/core';
+
 import { JsonSchemaFormService } from '../json-schema-form.service';
 
-
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'template-widget',
   template: `<div #widgetContainer></div>`,
 })
@@ -44,7 +37,7 @@ export class TemplateComponent implements OnInit, OnChanges {
       );
     }
     if (this.newComponent) {
-      for (const input of ['layoutNode', 'layoutIndex', 'dataIndex']) {
+      for (let input of ['layoutNode', 'layoutIndex', 'dataIndex']) {
         this.newComponent.instance[input] = this[input];
       }
     }
