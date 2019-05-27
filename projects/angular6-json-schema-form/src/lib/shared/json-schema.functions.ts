@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash-es/cloneDeep';
+import _ from 'lodash';
 import { forEach, hasOwn, mergeFilteredObject } from './utility.functions';
 import {
   getType,
@@ -696,7 +696,7 @@ export function getSubSchema(
   usedPointers = [ ...usedPointers, pointer ];
   let newSchema: any = null;
   if (pointer === '') {
-    newSchema = cloneDeep(schema);
+    newSchema = _.cloneDeep(schema);
   } else {
     const shortPointer = removeRecursiveReferences(pointer, schemaRecursiveRefMap);
     if (shortPointer !== pointer) { usedPointers = [ ...usedPointers, shortPointer ]; }
@@ -779,7 +779,7 @@ export function fixRequiredArrayProperties(schema) {
       hasOwn(schema[itemsObject], 'additionalProperties') ||
       schema.required.every(key => hasOwn(schema[itemsObject].properties, key))
     )) {
-      schema = cloneDeep(schema);
+      schema = _.cloneDeep(schema);
       schema[itemsObject].required = schema.required;
       delete schema.required;
     }

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
-import cloneDeep from 'lodash-es/cloneDeep';
+import _ from 'lodash';
 import { JsonSchemaFormService } from '../../json-schema-form.service';
 import { isDefined } from '../../shared';
 
@@ -109,10 +109,10 @@ export class MaterialDesignFrameworkComponent implements OnInit, OnChanges {
 
   initializeFramework() {
     if (this.layoutNode) {
-      this.options = cloneDeep(this.layoutNode.options || {});
+      this.options = _.cloneDeep(this.layoutNode.options || {});
       this.widgetLayoutNode = {
         ...this.layoutNode,
-        options: cloneDeep(this.layoutNode.options || {})
+        options: _.cloneDeep(this.layoutNode.options || {})
       };
       this.widgetOptions = this.widgetLayoutNode.options;
       this.formControl = this.jsf.getFormControl(this);

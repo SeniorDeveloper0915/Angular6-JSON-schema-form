@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash-es/cloneDeep';
+import _ from 'lodash';
 import Ajv from 'ajv';
 import jsonDraft6 from 'ajv/lib/refs/json-schema-draft-06.json';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
@@ -144,7 +144,7 @@ export class JsonSchemaFormService {
     const validationMessages = languageValidationMessages[languageCode];
 
     this.defaultFormOptions.defautWidgetOptions.validationMessages =
-      cloneDeep(validationMessages);
+      _.cloneDeep(validationMessages);
   }
 
   getData() { return this.data; }
@@ -176,7 +176,7 @@ export class JsonSchemaFormService {
     this.layoutRefLibrary = {};
     this.schemaRefLibrary = {};
     this.templateRefLibrary = {};
-    this.formOptions = cloneDeep(this.defaultFormOptions);
+    this.formOptions = _.cloneDeep(this.defaultFormOptions);
   }
 
   /**
@@ -259,7 +259,7 @@ export class JsonSchemaFormService {
 
   setOptions(newOptions: any) {
     if (isObject(newOptions)) {
-      const addOptions = cloneDeep(newOptions);
+      const addOptions = _.cloneDeep(newOptions);
       // Backward compatibility for 'defaultOptions' (renamed 'defautWidgetOptions')
       if (isObject(addOptions.defaultOptions)) {
         Object.assign(this.formOptions.defautWidgetOptions, addOptions.defaultOptions);
@@ -442,7 +442,7 @@ export class JsonSchemaFormService {
     if (!isObject(ctx)) { return false; }
     if (isEmpty(ctx.options)) {
       ctx.options = !isEmpty((ctx.layoutNode || {}).options) ?
-        ctx.layoutNode.options : cloneDeep(this.formOptions);
+        ctx.layoutNode.options : _.cloneDeep(this.formOptions);
     }
     ctx.formControl = this.getFormControl(ctx);
     ctx.boundControl = bind && !!ctx.formControl;

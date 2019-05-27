@@ -1,4 +1,4 @@
-import isEqual from 'lodash-es/isEqual';
+import _ from 'lodash';
 import {
   _executeAsyncValidators,
   _executeValidators,
@@ -206,7 +206,7 @@ export class JsonValidators {
         (isBoolean(enumValue, 'strict') &&
           toJavaScriptType(inputValue, 'boolean') === enumValue) ||
         (enumValue === null && !hasValue(inputValue)) ||
-        isEqual(enumValue, inputValue);
+        _.isEqual(enumValue, inputValue);
       const isValid = isArray(currentValue) ?
         currentValue.every(inputValue => allowedValues.some(enumValue =>
           isEqual(enumValue, inputValue)

@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash-es/cloneDeep';
+import _ from 'lodash';
 
 /**
  * 'convertSchemaToDraft6' function
@@ -313,7 +313,7 @@ export function convertSchemaToDraft6(schema, options: OptionObject = {}) {
       ) {
         newSchema[key] = convertSchemaToDraft6(newSchema[key], { changed, draft });
       } else {
-        newSchema[key] = cloneDeep(newSchema[key]);
+        newSchema[key] = _.cloneDeep(newSchema[key]);
       }
     });
 
